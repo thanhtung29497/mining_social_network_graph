@@ -9,7 +9,7 @@ import java.util.Set;
 public class Graph {
 	
 	public static final String GRAPH_INPUT_FILE_DIR = 
-			System.getProperty("user.dir") + "//input//sgb-words.txt";
+			System.getProperty("user.dir") + "//sgb-words.txt";
 	
 	private HashMap<String, LinkedList<String>> adjacencyLists;
 	

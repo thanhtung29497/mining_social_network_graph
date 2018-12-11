@@ -65,6 +65,7 @@ public class ShortestPathFinding {
 					System.out.print(" -> ");
 				}
 			}
+			System.out.println();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
