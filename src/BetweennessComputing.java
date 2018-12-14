@@ -63,9 +63,9 @@ public class BetweennessComputing {
 		Queue<String> openSet = new LinkedList<>();
 		this.degree = new HashMap<>();
 		this.shortestPathNumber = new HashMap<>();
-		this.reverseNodes = new LinkedList<>();
 		this.nodeValues = new HashMap<>();
 		this.reversePaths = new HashMap<>();
+		this.reverseNodes = new LinkedList<>();
 		
 		openSet.add(root);
 		this.shortestPathNumber.put(root, 1);
@@ -76,7 +76,7 @@ public class BetweennessComputing {
 			String currentNode = openSet.poll();
 			Integer currentDegree = this.degree.get(currentNode);
 			Integer currentShortestPathNumber = this.shortestPathNumber.get(currentNode);
-			Boolean isLeafNode = true;
+			this.reverseNodes.addFirst(currentNode);
 			
 			for (String neighbor: this.graph.getNeighborNodes(currentNode)) {
 				
@@ -86,21 +86,17 @@ public class BetweennessComputing {
 					this.shortestPathNumber.put(neighbor, currentShortestPathNumber);
 					openSet.add(neighbor);
 					this.addReversePath(currentNode, neighbor);
-					isLeafNode = false;
+					
 					
 				} else if (this.degree.get(neighbor) == currentDegree + 1) {
 					
 					this.shortestPathNumber.put(neighbor, 
 							this.shortestPathNumber.get(neighbor) + currentShortestPathNumber);
 					this.addReversePath(currentNode, neighbor);
-					isLeafNode = false;
 					
 				}
 			}
 			
-			if (isLeafNode) {
-				this.reverseNodes.add(currentNode);
-			} 
 			this.nodeValues.put(currentNode, 1.0);
 		}
 	}
@@ -114,20 +110,17 @@ public class BetweennessComputing {
 		}
 	}
 	
-	// reverse the tree from bfs calculate betweenness
+	// reverse the tree to calculate betweenness
 	
 	private void reverse(String root) {
 		
-		HashSet<String> addedNodes = new HashSet<>();
-		
 		while (!this.reverseNodes.isEmpty()) {
-			
 			String currentNode = this.reverseNodes.poll();
 			Double currentNodeValues = this.nodeValues.get(currentNode);
 			Integer currentShortestPath = this.shortestPathNumber.get(currentNode);
 			if (!this.reversePaths.containsKey(currentNode)) {
 				// this is the root
-				break;
+				continue;
 			}
 			
 			for (String parent: this.reversePaths.get(currentNode)) {
@@ -138,11 +131,6 @@ public class BetweennessComputing {
 						fractionShortestPathValue * currentNodeValues);
 				this.nodeValues.put(parent, this.nodeValues.get(parent) + 
 						fractionShortestPathValue * currentNodeValues);
-				
-				if (!addedNodes.contains(parent)) {
-					this.reverseNodes.add(parent);
-					addedNodes.add(parent);
-				}
 			}
 		}
 	}
